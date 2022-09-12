@@ -1,7 +1,7 @@
 var knapp_EL = document.querySelector("#knappID");
 var input_EL = document.querySelector("#inputID");
 var feedback_EL = document.querySelector("#feedback");
-var restart_EL = document.querySelector("restart")
+var restart_EL = document.querySelector("#restart")
 
 var random_num = Math.floor(Math.random() * 100) + 1;
 var attempts = 5;
@@ -49,3 +49,10 @@ function sjekkTall(){
 knapp_EL.addEventListener("click", sjekkTall);
 restart_EL.addEventListener("click", restart);
 
+
+
+window.addEventListener('keyup', function(event) {
+    if (event.key === 'Enter') {
+        checkNumber()
+    }
+}
