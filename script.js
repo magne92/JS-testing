@@ -12,13 +12,14 @@ var playing = true;
 function restart(){
     attempts = 5;
     score = 0;
-    playing = true
+    random_num = Math.floor(Math.random() * 100) + 1;
+    playing = true;
 }
 
 function check_attempts(){
     if (attempts <= 0) {
         feedback_EL.innerHTML = "You have no more attempts left. Restart.";
-        playing = false
+        playing = false;
 
     }
 }
@@ -46,4 +47,5 @@ function sjekkTall(){
     } // end if playing
 } // end sjekktall function
 knapp_EL.addEventListener("click", sjekkTall);
+restart_EL.addEventListener("click", restart);
 
