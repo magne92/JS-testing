@@ -13,6 +13,8 @@ var new_game = true;
 var max_time = 30
 var time_left = max_time;
 
+
+// restart function
 function restart(){
     attempts = 5;
     score = 0;
