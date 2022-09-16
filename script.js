@@ -40,7 +40,7 @@ function sjekkTall(){
         playing = true;
         new_game = false;
     }
-    if (playing == true){
+    if (playing){
         console.log(input_EL.value);
         guessed_num = input_EL.value;
         attempts--;
