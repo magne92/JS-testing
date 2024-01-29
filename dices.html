@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="dices.css">
+</head>
+<body>
+    <div id="dice-container">
+        <div id="dice">6</div>
+    </div>
+    <button id="rollButton">Roll Dice</button>
+
+    <script>
+        document.getElementById('rollButton').addEventListener('click', function() {
+            const dice = document.getElementById('dice');
+            dice.classList.add('animate');
+
+            setTimeout(function() {
+                dice.innerHTML = Math.ceil(Math.random() * 6);
+                dice.classList.remove('animate');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

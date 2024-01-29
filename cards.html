@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cards</title>
+    <link rel="stylesheet" href="cards.css">
+</head>
+<body>
+
+    <div>
+        <button id="drawButton">Draw</button><br>
+        <button id="stayButton">Stay</button><br>
+        <h3>Player</h3> 
+        <div class="hand" id="playercards"></div>
+        <h3>Dealer</h3> 
+
+        <div class="hand" id="dealercards"></div>
+    </div>
+
+
+    <script>
+        var suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+        var ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace'];
+        var deck = [];
+
+        var drawbutton = document.getElementById('drawButton')
+        var staybutton = document.getElementById('stayButton')
+        var card_EL = document.getElementById('card')
+        var playercards = document.getElementById('playercards')
+        var dealercards = document.getElementById('dealercards')
+
+        var playerHand = []
+        var handValue = 0
+
+        var dealerHand = []
+        var dealerHandValue = 0
+
+        var staying = false
+        var dealerStay = false
+
+        function initializeDeck() { // lager en kortstokk, kjekt om vi vil lage flere kortstokker
+            deck = []; // tom kortstokk
+            for (let suit of suits) { // looper for å gå gjennom alle kort
+                for (let rank of ranks) {
+                    deck.push({rank: rank, suit: suit, imagePath: `cards/${rank}_of_${suit}.png` }); // legger til en tekst som representerer et kort i listen
+                }
+            }
+        }
+
+        function stay() {
+            if (handValue > dealerHandValue) {
+                drawDealerCard()
+            } else {
+                findWinner()
+            }
+
+        }
+
+        function findWinner() {
+            if (handValue > dealerHandValue){
+                console.log("win")
+
+            }
+            if (handValue < dealerHandValue){
+                console.log("loose")
+
+            }
+        }
+
+        function drawCard() {
+         
+            if (deck.length === 0) {
+                alert("No more cards in the deck!");
+                return;
+            }
+            var randomIndex = Math.floor(Math.random() * deck.length); // velger et tilfeldig kort fra kortstokken
+            var card = deck.splice(randomIndex, 1)[0]; // velger 1 kort og fjerner det fra deck
+            playerHand.push(card)
+
+            var new_card_image = document.createElement("img")
+            new_card_image.src = `${card.imagePath}`
+            new_card_image.classList.add('card')
+
+            handValue += getCardValue(card.rank)
+            console.log(handValue)
+
+            playercards.appendChild(new_card_image)
+
+            setTimeout(drawDealerCard, 2000)
+
+        }
+
+
+        function drawDealerCard() {
+            if (dealerStay) {
+                return;
+            }
+
+            if (handValue < dealerHandValue && dealerHandValue > 18 || dealerHandValue > 19) {
+                dealerStay = true
+                return
+            }
+
+            if (deck.length === 0) {
+                alert("No more cards in the deck!");
+                return;
+            }
+            var randomIndex = Math.floor(Math.random() * deck.length); // velger et tilfeldig kort fra kortstokken
+            var card = deck.splice(randomIndex, 1)[0]; // velger 1 kort og fjerner det fra deck
+            dealerHand.push(card)
+
+            var new_card_image = document.createElement("img")
+            new_card_image.src = `${card.imagePath}`
+            new_card_image.classList.add('card')
+
+            dealerHandValue += getCardValue(card.rank)
+            console.log(dealerHandValue)
+
+            dealercards.appendChild(new_card_image)
+            if (staying){
+                stay()
+            }  
+        }
+
+        function getCardValue(rank) {
+            if (['jack', 'queen', 'king'].includes(rank)) { // hvis rank til kortet er enten jack, queen eller king
+                return 10;
+            } else if (rank === 'ace') {
+                // her kan vi lage logikk som sier om ace skal være 11 eller 1
+                return 11; // eller 1
+            } else {
+                return parseInt(rank); // hvis det ikke var jack,queen,king eller ace, må det være et nummer kort
+            }
+        }
+
+        drawbutton.addEventListener('click', drawCard);
+        staybutton.addEventListener('click', stay);
+
+        // Initialize the deck when the script loads
+        initializeDeck();
+
+    </script>
+</body>
+</html>

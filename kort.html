@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cards</title>
+    <link rel="stylesheet" href="cards.css">
+</head>
+<body>
+    <button id="drawButton">Draw</button><br>
+    <button id="standButton">Stand</button><br>
+    <h1 id="playerscore">Player: 0</h1>
+    <h1 id="dealerscore">Dealer: 0</h1>
+
+    <h2 id="feedback"></h2>
+
+    <div class="table">
+        <div id="playerCard_container"></div>
+        <div id="dealerCard_container"></div>
+    </div>
+ 
+    <script>
+        var suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+        var ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace'];
+        var deck = [];
+        var hand_count = 0
+        var player_score = 0
+        var dealer_score = 0
+        var standing = false
+        var playing = true
+ 
+        var drawbutton = document.getElementById('drawButton')
+        var standbutton = document.getElementById('standButton')
+        var card_EL = document.getElementById('card')
+        var container = document.getElementById('playerCard_container')
+        var dealer_container = document.getElementById('dealerCard_container')
+        var score_EL = document.getElementById('playerscore')
+        var dealerScore_EL = document.getElementById('dealerscore')
+        var feedback_EL = document.getElementById('feedback')
+ 
+        function initializeDeck() { // lager en kortstokk, kjekt om vi vil lage flere kortstokker
+            deck = []; // tom kortstokk
+            for (let suit of suits) { // looper for å gå gjennom alle kort
+                for (let rank of ranks) {
+                    //deck.push(`${rank}_of_${suit}.png`); // legger til en tekst som representerer et kort i listen
+                    
+                    //deck.push( {rank: "7", image: "7_of_clubs.png"})
+                    deck.push( {rank: rank, image: `${rank}_of_${suit}.png`})
+                }
+            }
+        }
+ 
+        function drawCard() { // player trekker et kort
+            
+            if (deck.length === 0) {
+                alert("No more cards in the deck, or max amount of cards on hand!");
+                return;
+            }
+            hand_count++; // øker hand_count, lik antall kort vi har på "hånden"
+            var randomIndex = Math.floor(Math.random() * deck.length); // velger et tilfeldig kort fra kortstokken
+            var card = deck.splice(randomIndex, 1)[0]; // velger 1 kort og fjerner det fra deck
+            var new_card = document.createElement("img") // oppretter ny img element
+
+            new_card.src = `cards/${card.image}`;
+            new_card.classList.add('card')
+            //new_card.width = '250'
+            container.appendChild(new_card)
+
+            console.log("rank of card:", card.rank)
+
+            value_of_card = getCardValue(card.rank)
+            player_score += value_of_card
+            //card_EL.src = `cards/${card}`; // endrer src på img element, slik at bildet vises 
+
+            console.log(player_score)
+
+            score_EL.innerHTML = "Player: " + player_score // oppdaterer html innhold til score
+            
+            checkhand()
+
+
+            setTimeout(dealerDrawCard, 2000)
+        }
+
+
+        function dealerDrawCard(){
+            if (deck.length === 0) {
+                alert("No more cards in the deck");
+                return;
+            }
+
+            if ( player_score > 21) {
+                return
+            }
+
+            if ( dealer_score > 17 && dealer_score > player_score){
+                return // dealer stands
+            }
+           
+            var randomIndex = Math.floor(Math.random() * deck.length); // velger et tilfeldig kort fra kortstokken
+            var card = deck.splice(randomIndex, 1)[0]; // velger 1 kort og fjerner det fra deck
+            var new_card = document.createElement("img") // oppretter ny img element
+
+            new_card.src = `cards/${card.image}`;
+            new_card.classList.add('card')
+            dealer_container.appendChild(new_card)
+
+            value_of_card = getCardValue(card.rank)
+            dealer_score += value_of_card
+
+            dealerScore_EL.innerHTML = "Dealer: " + dealer_score // oppdaterer html innhold til score
+
+            checkhand()
+
+            if (standing == true) {
+                if (dealer_score < player_score) {
+                    dealerDrawCard()
+                } else {
+                    playing = false
+                    checkhand()
+                }
+            }
+
+        }
+
+        function getCardValue(rank){
+            if (['jack', 'queen', 'king'].includes(rank)) {
+                return 10;
+            } else if (rank == "ace") {
+                return 11; // skal i noen tilfeller returnere 1, gjør senere
+            } else {
+                return parseInt(rank) // omgjør teksten rank til et tall.
+            }
+        }
+
+        function checkhand() {
+            if (dealer_score == 21 && player_score == 21){
+                feedback_EL.innerHTML = "Both got 21, you loose."
+            } 
+            else if (dealer_score > 21) {
+                feedback_EL.innerHTML = "Dealer busted, you win."
+                console.log("Dealer bust")
+            }
+            else if (player_score > 21) {
+                feedback_EL.innerHTML = "You hit over 21, you loose."
+            }
+
+            else if (playing == false && player_score > dealer_score){
+                feedback_EL.innerHTML = "You win"
+
+            } else if (playing == false && player_score < dealer_score){
+                feedback_EL.innerHTML = "You loose"
+            }
+
+        }
+
+        function stand(){
+
+            if (player_score > dealer_score && standing == false) {
+                standing = true
+                dealerDrawCard()
+            }
+        }
+
+
+        drawbutton.addEventListener('click', drawCard);
+        standbutton.addEventListener('click', stand)
+ 
+        // Initialize the deck when the script loads
+        initializeDeck(); // lager kortstokken
+
+        console.log(deck)
+ 
+    </script>
+</body>
+</html>

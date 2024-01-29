@@ -1,0 +1,46 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(232, 152, 112);
+}
+
+.card {
+    width: 125px;
+    height: 182px;
+    animation: fly_in 0.5s forwards;
+}
+
+@keyframes fly_in{
+    0% {
+        transform: translateX(-1000px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.scores {
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+}
+
+.hand {
+    display: flex;
+    flex-direction: row;
+}
+
+.table {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: green;
+    border: solid 5px grey;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 20px;
+    width: 800px;
+    height: 500px;
+}
+

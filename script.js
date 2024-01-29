@@ -17,7 +17,6 @@ var time_left = max_time;
 // restart function
 function restart(){
     attempts = 5;
-    score = 0;
     random_num = Math.floor(Math.random() * 100) + 1;
     new_game = true;
     playing = false
@@ -86,3 +85,6 @@ function myTimer(){
         timer_EL.innerHTML = "Time left: " + time_left; // setter tallet i time_left inn i HTML tag, timer_EL
     }
 }
+
+
+
